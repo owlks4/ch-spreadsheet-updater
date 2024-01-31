@@ -60,10 +60,10 @@ function onCSVloadComplete(results){
             console.log("Finished?")
        }
     })
+
+    alert("And then look at nominatim too, to get the latlong");  //https://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=json&polygon=1&addressdetails=1
 }
 
 async function pingCompaniesHouseForInformationRelatingToABusinessCalled(businessName){
     await companiesHouseFetch("advanced-search/companies?company_name_includes="+businessName);
 }
-
-"https://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=json&polygon=1&addressdetails=1"

@@ -1,4 +1,4 @@
-#This is not intended for widespread use; I keep it on github because it's easier to whitelist a web address with the Companies House API if it has a proper address, rather than a local one.
+# This is not intended for generic use; it's kept on github because it's easier to whitelist a web address with the Companies House API if it has a proper address, rather than a local one.
 
 # Companies House Spreadsheet Updater
 

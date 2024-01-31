@@ -14,7 +14,7 @@ What does it need to do?
 
 */
 
-const API_KEY = prompt("Please provide the Companies House API key associated with the website this program is hosted on to continue.")
+const API_KEY = prompt("Please provide the Companies House API key associated with the website this program is hosted on to continue.").trim()
 
 let existingCsvUploader = document.getElementById("existing-csv-file-upload");
 let informationObtainedFromCompaniesHouse = [];
@@ -53,9 +53,9 @@ function onCSVloadComplete(results){
     console.log(results)
 
     let targetNumber = Object.keys(results.data[0]).length;
-
-    Object.keys(results.data[0]).forEach(async (cell)=>{
-       await pingCompaniesHouseForInformationRelatingToABusinessCalled(cell);
+    let d = results.data[0];
+    Object.keys(d).forEach(async (cell)=>{
+       await pingCompaniesHouseForInformationRelatingToABusinessCalled(d[cell]);
        if (informationObtainedFromCompaniesHouse.length == targetNumber){
             console.log("Finished?")
        }

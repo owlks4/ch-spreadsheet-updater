@@ -1,4 +1,6 @@
-# CH Spreadsheet Updater
+#This is not intended for widespread use; I keep it on github because it's easier to whitelist a web address with the Companies House API if it has a proper address, rather than a local one.
+
+# Companies House Spreadsheet Updater
 
 * Takes a CSV file with company names in the leftmost column as an input
 * For each line in the CSV, it searches up that company name on companies house, using the companies house API

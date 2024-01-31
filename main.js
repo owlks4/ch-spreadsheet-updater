@@ -2,7 +2,7 @@ import './style.css'
 import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
 
-function companiesHouseFetch(urlSuffix){
+async function companiesHouseFetch(urlSuffix){
     const url = "https://api.company-information.service.gov.uk/"+urlSuffix;
     let key = btoa("api-key-here");
     const options = {
@@ -18,7 +18,7 @@ function companiesHouseFetch(urlSuffix){
     .then( data => console.log(data) );
 }
 
-let API_KEY = prompt("Please provide the Companies House api key associated with this site to continue:")
+let API_KEY = prompt("Please provide the Companies House API key associated with this site to continue:")
 
 console.log(companiesHouseFetch("company/06638759"));
 

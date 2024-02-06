@@ -15,15 +15,28 @@ What does it need to do?
 
 */
 
-let existingCsvUploader = document.getElementById("existing-csv-file-upload");
-let companiesHouseCsvUploader = document.getElementById("companies-house-csv-file-upload");
-companiesHouseCsvUploader.style = "display:none;"
+let csvUploader = document.getElementById("csv-file-upload");
 let csvData = null;
 let companiesHouseData = null;
 let instructionsDOMElement = document.getElementById("instructions");
 let curStepDOMElement = document.getElementById("cur-step");
+let errorMessage = document.getElementById("error-message");
 
-let requiredPostcodes = ["B11","B11","B25","B26","B27"];
+let proceedButton = document.getElementById("proceed-button");
+proceedButton.addEventListener("click",()=>{
+    console.log("!")
+    if (csvUploader.files == null || csvUploader.files.length == 0){
+        setErrorMessage("You can't proceed to the next step because you haven't uploaded a CSV file!");
+    } else {
+        alert("Wow! We've got the CSV and will now perform the next step!")
+    }
+});
+
+function setErrorMessage(msg){
+    errorMessage.innerHTML = msg;
+}
+
+let requiredPostcodes = ["B10","B11","B25","B26","B27"];
 
 let instructionsCycle = [];
 
@@ -45,7 +58,7 @@ requiredPostcodes.forEach((postcode) => {
 });
 
 function addToInstructions(url){
-    instructionsCycle.push("Go to the URL below, click the big green 'Download results' button,<br>then come back here and upload the CSV you just obtained.<br><br><a href="+url+" target='_blank'>Click here to go to the URL</a>")
+    instructionsCycle.push("Go to the URL below, click the big green 'Download results' button,<br>then come back here and upload the CSV you just obtained.<br><br><a href="+url+" target='_blank'><strong>Click here to go to the URL</strong></a>")
 }
 
 updateCurStepDOMElement();
@@ -59,7 +72,7 @@ instructionsDOMElement.innerHTML = instructionsCycle[curInstruction];
 
 let curDate = new Date().getFullYear();
 
-existingCsvUploader.addEventListener("change", () => {loadCSV(existingCsvUploader.files[0], false)});
+csvUploader.addEventListener("change", () => {loadCSV(csvUploader.files[0], false)});
 
 
 
@@ -74,7 +87,7 @@ function loadCSV(file, isCH){
             }
             else {
                 csvData = results;
-                existingCsvUploader.style = "display:none;"
+                csvUploader.style = "display:none;"
                 companiesHouseCsvUploader.style = ""
                 alert("Now please upload a CSV downloaded from the advanced search page on the Companies House website.\n\nRemember that advanced search results clip at 5000 entries, so if your CSV only has 5000 entries, it means some results may have been clipped.");
                 companiesHouseCsvUploader.addEventListener("change", () => {loadCSV(companiesHouseCsvUploader.files[0], true)});

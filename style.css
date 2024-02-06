@@ -15,11 +15,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #7d83ff;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #6269f0;
 }
 
 body {
@@ -49,7 +49,14 @@ h1 {
 
 #steps {
   background-color:#333333;
-  padding: 0.25em 2em 2em 2em;
+  padding: 0.25em 2em 1em 2em;
+  text-align:center;
+}
+
+#error-message {
+  color:red;
+  display:block;
+  margin: 0 0;
 }
 
 button {

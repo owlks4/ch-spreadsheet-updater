@@ -25,7 +25,7 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  margin-top:5%;
+  margin-top:12.5%;
   min-width: 320px;
 }
 
@@ -39,27 +39,17 @@ h1 {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  display:flex;
+  flex-direction: row;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
+#info {
+  padding-right:2em;
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+#steps {
+  background-color:#333333;
+  padding: 0.25em 2em 2em 2em;
 }
 
 button {
@@ -92,9 +82,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
-
-#steps {
-  background-color:#333333;
-  padding: 0.25em 1em 2em 1em;
 }

@@ -45,7 +45,7 @@ requiredPostcodes.forEach((postcode) => {
 });
 
 function addToInstructions(url){
-    instructionsCycle.push("Go to the URL below, click the big green 'Download results' button,<br>then come back here and upload the CSV you just obtained.<br><br><a href="+url+" target='_blank'>Click here to go to the url</a>")
+    instructionsCycle.push("Go to the URL below, click the big green 'Download results' button,<br>then come back here and upload the CSV you just obtained.<br><br><a href="+url+" target='_blank'>Click here to go to the URL</a>")
 }
 
 updateCurStepDOMElement();

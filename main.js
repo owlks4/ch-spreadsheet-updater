@@ -20,12 +20,47 @@ let companiesHouseCsvUploader = document.getElementById("companies-house-csv-fil
 companiesHouseCsvUploader.style = "display:none;"
 let csvData = null;
 let companiesHouseData = null;
+let instructionsDOMElement = document.getElementById("instructions");
+let curStepDOMElement = document.getElementById("cur-step");
+
+let requiredPostcodes = ["B11","B11","B25","B26","B27"];
+
+let instructionsCycle = [];
+
+let searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
+
+let curInstruction = 0;
+
+let d = new Date();
+let year = d.getFullYear();
+let month = d.getMonth();
+let day = d.getDate();
+
+let sixteenHundredToTwoThousandAndFive = "&incorporationFromDay=1&incorporationFromMonth=1&incorporationFromYear=1600&incorporationToDay=1&incorporationToMonth=1&incorporationToYear=2005&sicCodes=&dissolvedFromDay=&dissolvedFromMonth=&dissolvedFromYear=&dissolvedToDay=&dissolvedToMonth=&dissolvedToYear="
+let twoThousandAndFiveToToday = "&incorporationFromDay=1&incorporationFromMonth=1&incorporationFromYear=1600&incorporationToDay="+day+"&incorporationToMonth="+month+"&incorporationToYear="+year+"&sicCodes=&dissolvedFromDay=&dissolvedFromMonth=&dissolvedFromYear=&dissolvedToDay=&dissolvedToMonth=&dissolvedToYear="
+
+requiredPostcodes.forEach((postcode) => {
+    addToInstructions(searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+sixteenHundredToTwoThousandAndFive)
+    addToInstructions(searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+twoThousandAndFiveToToday)
+});
+
+function addToInstructions(url){
+    instructionsCycle.push("Go to the URL below, click the big green 'Download results' button,<br>then come back here and upload the CSV you just obtained.<br><br><a href="+url+" target='_blank'>Click here to go to the url</a>")
+}
+
+updateCurStepDOMElement();
+
+function updateCurStepDOMElement(){
+    curStepDOMElement.innerHTML = "Step "+(curInstruction+1)+" of "+instructionsCycle.length;
+}
+
+instructionsDOMElement.innerHTML = instructionsCycle[curInstruction];
+
 
 let curDate = new Date().getFullYear();
 
-alert("On the following screen, please upload the existing CSV that you want to update with new values. The leftmost column will be treated as the name. In fact, it'll ONLY read the leftmost column.");
-
 existingCsvUploader.addEventListener("change", () => {loadCSV(existingCsvUploader.files[0], false)});
+
 
 
 function loadCSV(file, isCH){

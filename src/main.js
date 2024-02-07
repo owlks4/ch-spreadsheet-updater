@@ -25,14 +25,11 @@ let positiveMessage = document.getElementById("positive-message");
 
 let proceedButton = document.getElementById("proceed-button");
 proceedButton.addEventListener("click",()=>{
-    console.log("!")
     if (csvUploader.files == null || csvUploader.files.length == 0){
         setErrorMessage("You can't proceed to the next step because<br>you haven't uploaded a CSV file!");
     } else {
         loadCSV(csvUploader.files[0], false);
-        if (curInstruction < instructionsCycle.length - 1){
-            curInstruction++;
-        }
+        curInstruction++; //this doesn't get checked for sanity here, but it does get checked in updateCurStepDOMElement, so it's ok.
         csvUploader.files = null;
         csvUploader.value = null;
         updateCurStepDOMElement();
@@ -40,22 +37,11 @@ proceedButton.addEventListener("click",()=>{
     }
 });
 
-function setPositiveMessage(msg){
-    positiveMessage.innerHTML = msg;
-    errorMessage.innerHTML = "";
-}
-
-function setErrorMessage(msg){
-    errorMessage.innerHTML = msg;
-    positiveMessage.innerHTML = "";
-}
+let searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
 
 let requiredPostcodes = ["B10","B11","B25","B26","B27"];
 
 let instructionsCycle = [];
-
-let searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
-
 let curInstruction = 0;
 
 let d = new Date();
@@ -79,8 +65,48 @@ function addToInstructions(smallDesc,url){
 updateCurStepDOMElement();
 
 function updateCurStepDOMElement(){
-    curStepDOMElement.innerHTML = "Step "+(curInstruction+1)+" of "+instructionsCycle.length;
-    instructionsDOMElement.innerHTML = instructionsCycle[curInstruction];
+    if (curInstruction == instructionsCycle.length){
+        setPositiveMessage("");
+        alert("Finished! Now ask if they have an existing spreadsheet that they want to append this information to as new columns on the right - but they don't have to.");
+        let userPresentedExistingSpreadsheet = false;
+        let combinedCsv = null;
+        if (userPresentedExistingSpreadsheet){
+            alert("Deal with the existing spreadsheet here! Somehow!");
+        } else {
+            combinedCsv = [];
+            loadedCsvData.forEach((csv)=>{
+                csv.data.forEach((row)=>{
+                    combinedCsv.push(row);
+                })
+            });
+            setPositiveMessage("All done! You should now immediately be prompted to download a new, combined CSV.")
+            downloadAsFile(Papa.unparse(combinedCsv), "text/plain", "combined.csv");
+        }
+    
+    } else {
+        curStepDOMElement.innerHTML = "Step "+(curInstruction+1)+" of "+instructionsCycle.length;
+        instructionsDOMElement.innerHTML = instructionsCycle[curInstruction];
+    }
+}
+
+function setPositiveMessage(msg){
+    positiveMessage.innerHTML = msg;
+    errorMessage.innerHTML = "";
+}
+
+function setErrorMessage(msg){
+    errorMessage.innerHTML = msg;
+    positiveMessage.innerHTML = "";
+}
+
+function downloadAsFile(data, type, name) {
+    let blob = new Blob([data], {type});
+    let url = window.URL.createObjectURL(blob);
+    let anchor = document.createElement("a");
+    anchor.download = name;
+    anchor.href = url;
+    anchor.click();
+    window.URL.revokeObjectURL(url);
 }
 
 function loadCSV(file){

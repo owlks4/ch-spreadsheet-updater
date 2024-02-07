@@ -4,12 +4,36 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="https://owlks4.github.io/ch-spreadsheet-updater/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-    <script type="module" crossorigin src="https://owlks4.github.io/ch-spreadsheet-updater/assets/index-Q6fnHfzq.js"></script>
-    <link rel="stylesheet" crossorigin href="https://owlks4.github.io/ch-spreadsheet-updater/assets/index-X4m0RMh6.css">
+    <title>Companies House spreadsheet updater</title>
+    <script type="module" crossorigin src="https://owlks4.github.io/ch-spreadsheet-updater/assets/index-puPhMwRJ.js"></script>
+    <link rel="stylesheet" crossorigin href="https://owlks4.github.io/ch-spreadsheet-updater/assets/index-r_w2LonP.css">
   </head>
   <body>
-    <input type="file" id="existing-csv-file-upload">
-    <div id="app"></div>
+    <div id="app">
+      <div id="info">
+        <h2>Companies house spreadsheet updater</h2>
+        <p>
+          Generates Companies House advanced search links, so that you can<br>quickly download each CSV and feed them into this page as you go.<br><br>Then, at the end, it combines them all into one, just for you, and<br>tacks the new columns onto an existing CSV of your choosing!
+          <br><br>
+          Simply keep following the instructions until you've exhausted them.
+          <br>
+          <span class="smallDesc">
+            (It's a multi-step process because otherwise Companies House would cut off<br>the results at 5000;
+            dividing the search into multiple queries addresses that.)
+          </span>
+          <br>
+        </p>
+      </div>
+      <div id="steps">
+        <h4 id="cur-step" style="margin-bottom:0;">Step 1 of ?</h4>
+        <p id="instructions" style="margin-top:0;"></p>
+        <input type="file" id="csv-file-upload">
+        <br>
+        <br>
+        <button id="proceed-button">Proceed</button>
+        <p id="error-message"></p>
+        <p id="positive-message"></p>
+      </div>
+    </div>
   </body>
 </html>

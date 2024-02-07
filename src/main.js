@@ -15,7 +15,7 @@ What does it need to do?
 */
 
 let csvUploader = document.getElementById("csv-file-upload");
-csvUploader.addEventListener("change", () => {setErrorMessage(""); setPositiveMessage("Now click the 'proceed' button.")});
+csvUploader.addEventListener("change", () => {setErrorMessage(""); setPositiveMessage("Now click the 'proceed' button."); proceedButton.style="";});
 let loadedCsvData = [];
 let companiesHouseData = null;
 let instructionsDOMElement = document.getElementById("instructions");
@@ -37,9 +37,9 @@ proceedButton.addEventListener("click",()=>{
     }
 });
 
-let searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
-
-let requiredPostcodes = ["B10","B11","B25","B26","B27"];
+const getDissolvedBusinessesAsWell = true;
+const searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
+const requiredPostcodes = ["Birmingham B10","Birmingham B11","Birmingham B25","Birmingham B26","Birmingham B27"];
 
 let instructionsCycle = [];
 let curInstruction = 0;
@@ -56,10 +56,14 @@ let midpointToToday = "&incorporationFromDay=1&incorporationFromMonth=1&incorpor
 requiredPostcodes.forEach((postcode) => {
     addToInstructions("("+postcode + ", active, incorporated pre-"+midpoint_year+")", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+sixteenHundredToMidpoint)
     addToInstructions("("+postcode + ", active, incorporated "+midpoint_year+"-present)", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+midpointToToday)
+    if (getDissolvedBusinessesAsWell){
+        addToInstructions("("+postcode + ", dissolved, incorporated pre-"+midpoint_year+")", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+sixteenHundredToMidpoint.replace("=active&","=dissolved&"))
+        addToInstructions("("+postcode + ", dissolved, incorporated "+midpoint_year+"-present)", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+midpointToToday.replace("=active&","=dissolved&"))
+    }
 });
 
 function addToInstructions(smallDesc,url){
-    instructionsCycle.push("<span class='smallDesc'>"+smallDesc+"</span><br><br>Go to the URL below, click the big green 'Download results' button,<br>then come back here and upload the CSV you just obtained.<br><br><a href="+url+" target='_blank'><strong>Click here to go to the step "+(instructionsCycle.length+1)+" URL</strong></a>")
+    instructionsCycle.push("<span class='smallDesc'>"+smallDesc+"</span><br><br>Go to the URL below, click the big green 'Download results' button,<br>then come back here and upload the CSV you just obtained.<br><br><a href='"+url+"' onclick='document.getElementById(\"csv-file-upload\").style = \"\";' target='_blank'><strong>Click here to go to the step "+(instructionsCycle.length+1)+" URL</strong></a>")
 }
 
 updateCurStepDOMElement();
@@ -80,12 +84,17 @@ function updateCurStepDOMElement(){
                 })
             });
             setPositiveMessage("All done! You should now immediately be prompted to download a new, combined CSV.")
-            downloadAsFile(Papa.unparse(combinedCsv), "text/plain", "combined.csv");
+            let combinedCsvAsText = Papa.unparse(combinedCsv);
+            combinedCsvAsText = combinedCsvAsText.replaceAll("registered_office_address","registered_office_address,postcode"); //creates a postcode column at the end of the headers
+            combinedCsvAsText = combinedCsvAsText.replaceAll("Birmingham B","Birmingham,B");   //creates a postcode column at the end of the data fields
+            downloadAsFile(combinedCsvAsText, "text/plain", "combined.csv");
         }
     
     } else {
         curStepDOMElement.innerHTML = "Step "+(curInstruction+1)+" of "+instructionsCycle.length;
         instructionsDOMElement.innerHTML = instructionsCycle[curInstruction];
+        csvUploader.style = "display:none;";
+        proceedButton.style = "display:none;";
     }
 }
 
@@ -136,7 +145,6 @@ function onCSVloadComplete(){
     csvData.data = d;
 
     let outputCSVtext = Papa.unparse(csvData.data);
-    console.log(outputCSVtext)
 
     alert("And then look at nominatim too, to get the latlong");  //https://nominatim.openstreetmap.org/search?q=135+pilkington+avenue,+birmingham&format=json&polygon=1&addressdetails=1
 }

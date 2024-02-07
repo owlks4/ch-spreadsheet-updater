@@ -11,22 +11,28 @@
       <div id="info">
         <h2>Companies house spreadsheet updater</h2>
         <p>
-          Generates Companies House advanced search links, so that you can<br>quickly download each CSV and feed them into this page as you go.<br><br>Then, at the end, it combines them all into one, just for you!
+          Generates Companies House advanced search links, so that you can<br>quickly download each CSV and feed them into this page as you go.<br><br>Then, at the end, it combines them all into one, just for you, and<br>tacks the new columns onto an existing CSV of your choosing!
           <br><br>
-          Simply keep following the instructions<br>until you've exhausted them.
+          Simply keep following the instructions until you've exhausted them.
+          <br>
+          <span class="smallDesc">
+            (It's a multi-step process because otherwise Companies House would cut off<br>the results at 5000;
+            dividing the search into multiple queries addresses that.)
+          </span>
           <br>
         </p>
       </div>
       <div id="steps">
-        <h4 id="cur-step">Step 1 of ?</h4>
-        <p id="instructions"></p>
+        <h4 id="cur-step" style="margin-bottom:0;">Step 1 of ?</h4>
+        <p id="instructions" style="margin-top:0;"></p>
         <input type="file" id="csv-file-upload">
         <br>
         <br>
         <button id="proceed-button">Proceed</button>
         <p id="error-message"></p>
+        <p id="positive-message"></p>
       </div>
     </div>
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>

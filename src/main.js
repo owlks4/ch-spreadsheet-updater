@@ -57,8 +57,8 @@ requiredPostcodes.forEach((postcode) => {
     addToInstructions("("+postcode + ", active, incorporated pre-"+midpoint_year+")", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+sixteenHundredToMidpoint)
     addToInstructions("("+postcode + ", active, incorporated "+midpoint_year+"-present)", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+midpointToToday)
     if (getDissolvedBusinessesAsWell){
-        addToInstructions("("+postcode + ", dissolved, incorporated pre-"+midpoint_year+")", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+sixteenHundredToMidpoint.replace("=active&","=dissolved&"))
-        addToInstructions("("+postcode + ", dissolved, incorporated "+midpoint_year+"-present)", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+midpointToToday.replace("=active&","=dissolved&"))
+        addToInstructions("("+postcode + ", dissolved, incorporated pre-"+midpoint_year+")", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+sixteenHundredToMidpoint.replace("=active&","=dissolved&").replace("dissolvedFromDay=&dissolvedFromMonth=&dissolvedFromYear=","dissolvedFromDay=1&dissolvedFromMonth=1&dissolvedFromYear=2015"))
+        addToInstructions("("+postcode + ", dissolved, incorporated "+midpoint_year+"-present)", searchURLPrefix + "\companyNameIncludes=&companyNameExcludes=&registeredOfficeAddress="+postcode+midpointToToday.replace("=active&","=dissolved&").replace("dissolvedFromDay=&dissolvedFromMonth=&dissolvedFromYear=","dissolvedFromDay=1&dissolvedFromMonth=1&dissolvedFromYear=2015"))
     }
 });
 
@@ -79,14 +79,23 @@ function updateCurStepDOMElement(){
         } else {
             combinedCsv = [];
             loadedCsvData.forEach((csv)=>{
-                csv.data.forEach((row)=>{
+                csv.data.forEach((row)=>{                    
+                    let incorporationYearMonthDay = row["incorporation_date"].split("-");
+                    let dissolutionYearMonthDay = row["dissolution_date"].split("-");
+                    row["postcode"] = row["registered_office_address"].trim().replace("  "," ").slice(-7).trim().replace(",","").toUpperCase();
+                    row["incorporation_year"] = incorporationYearMonthDay[0];
+                    row["incorporation_month"] = incorporationYearMonthDay[1];
+                    row["incorporation_day"] = incorporationYearMonthDay[2];
+                    row["dissolution_year"] = dissolutionYearMonthDay[0];
+                    row["dissolution_month"] = dissolutionYearMonthDay[1];
+                    row["dissolution_day"] = dissolutionYearMonthDay[2];                                    
+                    delete row["incorporation_date"];
+                    delete row["dissolution_date"];
                     combinedCsv.push(row);
                 })
             });
             setPositiveMessage("All done! You should now immediately be prompted to download a new, combined CSV.")
-            let combinedCsvAsText = Papa.unparse(combinedCsv);
-            combinedCsvAsText = combinedCsvAsText.replaceAll("registered_office_address","registered_office_address,postcode"); //creates a postcode column at the end of the headers
-            combinedCsvAsText = combinedCsvAsText.replaceAll("Birmingham B","Birmingham,B");   //creates a postcode column at the end of the data fields
+            let combinedCsvAsText = Papa.unparse(combinedCsv);            
             downloadAsFile(combinedCsvAsText, "text/plain", "combined.csv");
         }
     

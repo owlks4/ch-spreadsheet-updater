@@ -83,6 +83,21 @@ function updateCurStepDOMElement(){
                     let incorporationYearMonthDay = row["incorporation_date"].split("-");
                     let dissolutionYearMonthDay = row["dissolution_date"].split("-");
                     row["postcode"] = row["registered_office_address"].trim().replace("  "," ").slice(-7).trim().replace(",","").toUpperCase();
+                    if (row["nature_of_business"].length > 2){  
+                        let natures = row["nature_of_business"].trim().split(" ");
+                        let sectors = "";
+                        natures.forEach((sicCode)=>{
+                            if (sectors != ""){ //adds a space before the next entry, if this is the second entry or higher
+                                sectors += " ";
+                            }
+                            let potentialNewSector = sicCode.slice(0,2);
+                            if (!sectors.includes(potentialNewSector)){
+                                sectors += potentialNewSector;
+                            }                            
+                        });
+                        row["sectorCodes"] = sectors;
+                    }
+
                     row["incorporation_year"] = incorporationYearMonthDay[0];
                     row["incorporation_month"] = incorporationYearMonthDay[1];
                     row["incorporation_day"] = incorporationYearMonthDay[2];

@@ -37,9 +37,12 @@ proceedButton.addEventListener("click",()=>{
     }
 });
 
-const getDissolvedBusinessesAsWell = true;
+const POSTCODES_NEAR_TYSELEY = ["Birmingham B10","Birmingham B11","Birmingham B25","Birmingham B26","Birmingham B27"];
+const POSTCODES_NEAR_CASTLE_VALE = ["Birmingham B34", "Birmingham B35","Birmingham B76"];
+
+const getDissolvedBusinessesAsWell = false;
 const searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
-const requiredPostcodes = ["Birmingham B10","Birmingham B11","Birmingham B25","Birmingham B26","Birmingham B27"];
+const requiredPostcodes = POSTCODES_NEAR_TYSELEY;
 
 let instructionsCycle = [];
 let curInstruction = 0;
@@ -98,6 +101,7 @@ function updateCurStepDOMElement(){
                         row["sectorCodes"] = sectors;
                     }
 
+                    row["registered_office_address"] = row["registered_office_address"].replace(",","")
                     row["incorporation_year"] = incorporationYearMonthDay[0];
                     row["incorporation_month"] = incorporationYearMonthDay[1];
                     row["incorporation_day"] = incorporationYearMonthDay[2];

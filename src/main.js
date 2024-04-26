@@ -73,8 +73,7 @@ updateCurStepDOMElement();
 
 function updateCurStepDOMElement(){
     if (curInstruction == instructionsCycle.length){
-        setPositiveMessage("");
-        alert("Finished! Now ask if they have an existing spreadsheet that they want to append this information to as new columns on the right - but they don't have to.");
+        setPositiveMessage("");       
         let userPresentedExistingSpreadsheet = false;
         let combinedCsv = null;
         if (userPresentedExistingSpreadsheet){

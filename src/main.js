@@ -37,8 +37,8 @@ proceedButton.addEventListener("click",()=>{
     }
 });
 
-const POSTCODES_NEAR_TYSELEY = ["Birmingham B10","Birmingham B11","Birmingham B25","Birmingham B26","Birmingham B27"];
-const POSTCODES_NEAR_CASTLE_VALE = ["Birmingham B34", "Birmingham B35","Birmingham B76"];
+const POSTCODES_NEAR_TYSELEY = [" B10"," B11"," B25"," B26"," B27"];
+const POSTCODES_NEAR_CASTLE_VALE = [" B34", " B35"," B76"];
 
 const getDissolvedBusinessesAsWell = false;
 const searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
@@ -115,7 +115,7 @@ function updateCurStepDOMElement(){
             });
             setPositiveMessage("All done! You should now immediately be prompted to download a new, combined CSV.")
             let combinedCsvAsText = Papa.unparse(combinedCsv);            
-            downloadAsFile(combinedCsvAsText, "text/plain", "combined.csv");
+            downloadAsFile(combinedCsvAsText, "text/plain", "ch-spreadsheet-updater-output-"+Date.now()+".csv");
         }
     
     } else {

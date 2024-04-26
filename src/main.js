@@ -42,7 +42,7 @@ const POSTCODES_NEAR_CASTLE_VALE = [" B34", " B35"," B76"];
 
 const getDissolvedBusinessesAsWell = false;
 const searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
-const requiredPostcodes = POSTCODES_NEAR_TYSELEY;
+const requiredPostcodes = POSTCODES_NEAR_CASTLE_VALE;
 
 let instructionsCycle = [];
 let curInstruction = 0;

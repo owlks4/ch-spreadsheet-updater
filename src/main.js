@@ -39,10 +39,15 @@ proceedButton.addEventListener("click",()=>{
 
 const POSTCODES_NEAR_TYSELEY = [" B10"," B11"," B25"," B26"," B27"];
 const POSTCODES_NEAR_CASTLE_VALE = [" B34", " B35"," B76"];
+const POSTCODES_WHOLE_OF_BHAM_INCLUDING_SOLIHULL_TYSELEY_AND_CASTLE_VALE = [' B1', ' B10', ' B11', ' B12', ' B13', ' B14', ' B15', ' B16', ' B17', ' B18', ' B19', ' B2', ' B20', ' B21', ' B23', ' B24', ' B25', ' B26', ' B27', ' B28', ' B29', ' B3', ' B30', ' B31', ' B32', ' B33', ' B34', ' B35', ' B36', ' B37', ' B38', ' B4', ' B40', ' B42', ' B43', ' B44', ' B45', ' B46', ' B47', ' B48', ' B49', ' B5', ' B50', ' B6', ' B62', ' B63', ' B64', ' B65', ' B66', ' B67', ' B68', ' B69', ' B7', ' B70', ' B71', ' B72', ' B73', ' B74', ' B75', ' B76', ' B8',  ' B9', ' B90', ' B91', ' B92', ' B93', ' B94', ' B99'];
+
+const POSTCODES_REDDITCH_HENLEY_STUDLEY = [' B80', ' B95', ' B96', ' B97', ' B98',]
+const POSTCODES_BROMSGROVE = [' B60', ' B61']
+const POSTCODES_TAMWORTH = [' B77', ' B78', ' B79']
 
 const getDissolvedBusinessesAsWell = false;
 const searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
-const requiredPostcodes = POSTCODES_NEAR_CASTLE_VALE;
+const requiredPostcodes = POSTCODES_WHOLE_OF_BHAM_INCLUDING_SOLIHULL_TYSELEY_AND_CASTLE_VALE;
 
 let instructionsCycle = [];
 let curInstruction = 0;

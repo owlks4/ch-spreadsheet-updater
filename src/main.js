@@ -6,13 +6,14 @@ import * as Papa from 'papaparse';
 
 What does it need to do?
 
-* Takes your CSV file full of company names as an input
-* It then looks these up in a CSV that you obtained from Companies House (it doesn't use the API because the API frequently refused to cooperate)
-* It then returns a new CSV featuring these company names, in the same order, as well as the updated data received from the Companies House CSV (e.g. dissolved or active, postcode, address)
-* Entries found in the Companies House CSV that are not present in the one the user is updating will also be added as skeleton entries
-* Should also take the opportunity to ping the nominatim openstreetmap api with the address of each company entry, to get automatic lat/long coordinates
+* Repeatedly allows the user to look up their list of postcode prefixes in Companies House, and collates the data into one CSV for you (it doesn't use the API because the API frequently refused to cooperate)
+* While this still requires user intervention, it's still massively streamlined and much more efficient (you can easily do an entire city worth of businesses in about 20 minutes).
+
+Where is the postcode prefix input, you ask? It's down near line 50.
 
 */
+
+let FAKE_CSV = "company_name, company_number, company_status, company_type, company_subtype, dissolution_date, incorporation_date, removed_date, registered_date, nature_of_business, registered_office_address";
 
 let csvUploader = document.getElementById("csv-file-upload");
 csvUploader.addEventListener("change", () => {setErrorMessage(""); setPositiveMessage("Now click the 'proceed' button."); proceedButton.style="";});
@@ -23,19 +24,31 @@ let curStepDOMElement = document.getElementById("cur-step");
 let errorMessage = document.getElementById("error-message");
 let positiveMessage = document.getElementById("positive-message");
 
+let nothingThereButton = document.getElementById("nothing-there-button");
+nothingThereButton.addEventListener("click",()=>{
+    proceedStepWithCSV(FAKE_CSV);
+});
+
+
+function proceedStepWithCSV(csv){
+    loadCSV(csv, false);
+    curInstruction++; //this doesn't get checked for sanity here, but it does get checked in updateCurStepDOMElement, so it's ok.
+    csvUploader.files = null;
+    csvUploader.value = null;
+    updateCurStepDOMElement();
+    setPositiveMessage("Thanks. The step has advanced and the URL has changed.<br>Now please do it again with the new URL above.")
+}
+
 let proceedButton = document.getElementById("proceed-button");
 proceedButton.addEventListener("click",()=>{
     if (csvUploader.files == null || csvUploader.files.length == 0){
         setErrorMessage("You can't proceed to the next step because<br>you haven't uploaded a CSV file!");
     } else {
-        loadCSV(csvUploader.files[0], false);
-        curInstruction++; //this doesn't get checked for sanity here, but it does get checked in updateCurStepDOMElement, so it's ok.
-        csvUploader.files = null;
-        csvUploader.value = null;
-        updateCurStepDOMElement();
-        setPositiveMessage("Thanks. The step has advanced and the URL has changed.<br>Now please do it again with the new URL above.")
+        proceedStepWithCSV(csvUploader.files[0])
     }
 });
+
+// Welcome to the postcode area. The actual postcode prefixes that get fed into the program are stored in the variable requiredPostcodes. The other constants are here so that you can easily get requiredPostcodes to reference some pre-existing values, and swap them out without having to write them out again later.
 
 const POSTCODES_NEAR_TYSELEY = [" B10"," B11"," B25"," B26"," B27"];
 const POSTCODES_NEAR_CASTLE_VALE = [" B34", " B35"," B76"];
@@ -51,7 +64,8 @@ const POSTCODES_TAMWORTH = [' B77', ' B78', ' B79']
 
 const getDissolvedBusinessesAsWell = false;
 const searchURLPrefix = "https://find-and-update.company-information.service.gov.uk/advanced-search/get-results?";
-const requiredPostcodes = POSTCODES_WHOLE_OF_BHAM_INCLUDING_SOLIHULL_TYSELEY_AND_CASTLE_VALE_FOURTH_QUARTER;
+
+const requiredPostcodes = POSTCODES_WHOLE_OF_BHAM_INCLUDING_SOLIHULL_TYSELEY_AND_CASTLE_VALE_FIRST_QUARTER;
 
 let instructionsCycle = [];
 let curInstruction = 0;
@@ -75,7 +89,7 @@ requiredPostcodes.forEach((postcode) => {
 });
 
 function addToInstructions(smallDesc,url){
-    instructionsCycle.push("<span class='smallDesc'>"+smallDesc+"</span><br><br>Go to the URL below, click the big green 'Download results' button,<br>then come back here and upload the CSV you just obtained.<br><br><a href='"+url+"' onclick='document.getElementById(\"csv-file-upload\").style = \"\";' target='_blank'><strong>Click here to go to the step "+(instructionsCycle.length+1)+" URL</strong></a>")
+    instructionsCycle.push("<span class='smallDesc'>"+smallDesc+"</span><br><br>Go to the URL below, click the big green 'Download results' button,<br>then come back here and upload the CSV you just obtained.<br><br><a href='"+url+"' onclick='document.getElementById(\"csv-file-upload\").style = \"\"; document.getElementById(\"nothing-there-button\").style = \"\";' target='_blank'><strong>Click here to go to the step "+(instructionsCycle.length+1)+" URL</strong></a>")
 }
 
 updateCurStepDOMElement();
@@ -123,6 +137,10 @@ function updateCurStepDOMElement(){
                         row["sectorCodes"] = sectors;
                     }
 
+					for (let i = 0; i < row.length; i++){
+						row[i] = row[i].replace("\"","").replace("'","").replace(";","").replace(",","");
+					}
+					
                     row["registered_office_address"] = row["registered_office_address"].replace(",","")
                     row["incorporation_year"] = incorporationYearMonthDay[0];
                     row["incorporation_month"] = incorporationYearMonthDay[1];
@@ -145,6 +163,7 @@ function updateCurStepDOMElement(){
         instructionsDOMElement.innerHTML = instructionsCycle[curInstruction];
         csvUploader.style = "display:none;";
         proceedButton.style = "display:none;";
+        nothingThereButton.style = "display:none;";
     }
 }
 

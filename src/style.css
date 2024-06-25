@@ -52,6 +52,7 @@ h1 {
   background-color:#333333;
   padding: 0.25em 2em 1em 2em;
   text-align:center;
+  position:relative;
 }
 
 .smallDesc {
@@ -88,4 +89,20 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+#nothing-there-button{
+  background-color: darkred;
+  color:white;
+  position:relative;
+  bottom:0;
+  position:absolute;
+  transform:translate(-50%,-50%);
+  padding:0.3em;
+  width:90%;
+  font-size:0.8em;
+}
+
+#nothing-there-button:hover {
+  border-color: lightgrey;
 }
